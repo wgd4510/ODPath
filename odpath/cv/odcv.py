@@ -50,6 +50,16 @@ def base64_to_pil(base64_str: str) -> Image.Image:
     # 建议加上 .convert("RGB")，防止某些格式（如 RGBA 或 P 模式）在后续处理中报错
     return image.convert("RGB")
 
+
+def numpy_to_base64_lossless(np_img):
+    pil_img = Image.fromarray(np_img)
+    output_buffer = BytesIO()
+    # 将 format 改为 PNG
+    pil_img.save(output_buffer, format="png")
+    byte_data = output_buffer.getvalue()
+    base64_str = base64.b64encode(byte_data).decode("utf-8")
+    return base64_str
+
 def numpy_to_base64_pil(data):
     """
     功能：将numpy数组转换为base64编码的字符串
