@@ -34,6 +34,21 @@ def base64_to_numpy(data):
     img_data = np.ascontiguousarray(img_data)
     return img_data
 
+def base64_to_pil(base64_str: str) -> Image.Image:
+    """
+    将 Base64 字符串转换为 PIL Image 对象
+    :param base64_str: Base64 编码的字符串（支持带 Data URI 前缀）
+    :return: PIL 图片对象
+    """
+    # 1. 如果包含 Data URI 前缀 (如 data:image/jpeg;base64,)，利用正则去掉它
+    if "base64," in base64_str:
+        base64_str = base64_str.split("base64,")[1]
+    # 2. 将字符串解码为字节流
+    img_bytes = base64.b64decode(base64_str)
+    # 3. 将字节流转为 BytesIO 对象并用 PIL 打开
+    image = Image.open(BytesIO(img_bytes))
+    # 建议加上 .convert("RGB")，防止某些格式（如 RGBA 或 P 模式）在后续处理中报错
+    return image.convert("RGB")
 
 def numpy_to_base64_pil(data):
     """
