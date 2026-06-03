@@ -60,6 +60,22 @@ def numpy_to_base64_lossless(np_img):
     base64_str = base64.b64encode(byte_data).decode("utf-8")
     return base64_str
 
+def pil_to_base64(image: Image.Image, format: str = "JPEG") -> str:
+    """
+    将 PIL Image 对象转换为 Base64 字符串
+    :param image: PIL 图片对象
+    :param format: 存储格式 (JPEG, PNG, WEBP 等)
+    :return: Base64 编码的字符串
+    """
+    # 1. 创建一个字节流容器
+    buffered = BytesIO()
+    # 2. 将 PIL 图片保存到字节流中，如果是 JPEG 格式，建议设置 quality
+    image.save(buffered, format=format)
+    # 3. 获取字节流内容并进行 Base64 编码
+    img_str = base64.b64encode(buffered.getvalue()).decode("utf-8")
+    return img_str
+
+
 def numpy_to_base64_pil(data):
     """
     功能：将numpy数组转换为base64编码的字符串
